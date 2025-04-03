@@ -359,6 +359,46 @@
             z-index: 20;
         }
 
+        /* Стилі для таблички програшу */
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.9);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 20;
+        }
+
+        #gameOverScreen.active {
+            opacity: 1;
+        }
+
+        #gameOverScreen h2 {
+            color: #ff0000;
+            font-size: clamp(2em, 8vw, 4em);
+            text-transform: uppercase;
+            text-shadow: 4px 4px 10px rgba(255, 0, 0, 0.5);
+            margin: 0;
+            text-align: center;
+            padding: 0 5vw;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        #gameOverScreen p {
+            color: #fff;
+            font-size: clamp(1em, 3vw, 1.5em);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 2vh 0;
+            animation: fadeIn 1s ease forwards 0.5s;
+        }
+
         /* Медіа-запити для малих екранів */
         @media (max-width: 600px) {
             .container {
@@ -399,6 +439,7 @@
         let timerInterval;
         let gameInterval;
         let score = 0;
+        let misses = 0; // Лічильник пропущених одиниць техніки
 
         function startTimer() {
             timerInterval = setInterval(updateTimer, 1000);
@@ -587,6 +628,7 @@
             const gameScreen = document.getElementById("gameScreen");
             const gameScore = document.getElementById("gameScore");
             score = 0;
+            misses = 0; // Скидаємо лічильник пропусків
 
             gameInterval = setInterval(() => {
                 spawnEnemyVehicle();
@@ -603,6 +645,8 @@
 
         // Функція для ворожої техніки
         function spawnEnemyVehicle() {
+            if (misses >= 3) return; // Якщо вже програли, не спавнимо нову техніку
+
             const vehicles = ["tank", "btr", "truck", "jeep"];
             let vehicle = document.createElement("div");
             vehicle.classList.add("enemy-vehicle");
@@ -619,7 +663,43 @@
                 playExplosionSound();
             };
             document.getElementById("gameScreen").appendChild(vehicle);
-            setTimeout(() => vehicle.remove(), 7000);
+            setTimeout(() => {
+                if (vehicle.parentElement) { // Перевіряємо, чи техніка ще на екрані
+                    misses++;
+                    vehicle.remove();
+                    if (misses >= 3) {
+                        clearInterval(gameInterval);
+                        showGameOver();
+                    }
+                }
+            }, 7000);
+        }
+
+        // Функція для показу таблички програшу
+        function showGameOver() {
+            const gameScreen = document.getElementById("gameScreen");
+            const gameOverDiv = document.createElement("div");
+            gameOverDiv.id = "gameOverScreen";
+            gameOverDiv.innerHTML = `
+                <h2>Ти програв!</h2>
+                <p>Тебе звільнено... хоча ні. Починай заново!</p>
+            `;
+            gameScreen.appendChild(gameOverDiv);
+            setTimeout(() => {
+                gameOverDiv.classList.add("active");
+            }, 10);
+
+            setTimeout(() => {
+                gameOverDiv.remove();
+                document.body.innerHTML = `
+                    <div class="game-screen" id="gameScreen">
+                        <p id="gameScore">Знищено: 0</p>
+                        <div id="shootHint">Стріляй!!!</div>
+                        <div id="trench"></div>
+                    </div>
+                `;
+                startGame();
+            }, 3000); // Перезапуск через 3 секунди
         }
 
         // Функція для звуку стрільби
