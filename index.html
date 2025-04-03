@@ -15,6 +15,7 @@
             background: linear-gradient(135deg, #ffeb3b, #ff9800);
             font-family: 'Arial', sans-serif;
             overflow: hidden;
+            transition: background 1s ease;
         }
 
         .container {
@@ -158,12 +159,47 @@
             0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
+
+        /* Прогрес-бар */
+        #progress {
+            width: 200px;
+            height: 20px;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: #d81b60;
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        /* Плаваючі сніданкові фрази */
+        .floating-text {
+            position: absolute;
+            color: #fff;
+            font-size: 1.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: floatText 8s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatText {
+            0% { transform: translate(0, 0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translate(100px, -100px); opacity: 0; }
+        }
     </style>
 </head>
 <body>
     <div class="container" id="timerContainer">
         <h1>Час завершити сніданок!</h1>
         <div id="timer">05:00</div>
+        <div id="progress"><div id="progress-bar"></div></div>
     </div>
 
     <div class="end-screen" id="endScreen">
@@ -173,10 +209,12 @@
 
     <script>
         let timeLeft = 30; // 5 хвилин у секундах
+        const totalTime = 30;
         const timerDisplay = document.getElementById("timer");
         const timerContainer = document.getElementById("timerContainer");
         const endScreen = document.getElementById("endScreen");
         const acceptBtn = document.getElementById("acceptBtn");
+        const progressBar = document.getElementById("progress-bar");
 
         function updateTimer() {
             let minutes = Math.floor(timeLeft / 60);
@@ -185,10 +223,19 @@
             seconds = seconds < 10 ? "0" + seconds : seconds;
             timerDisplay.textContent = `${minutes}:${seconds}`;
 
+            // Оновлення прогрес-бару
+            let progress = (timeLeft / totalTime) * 100;
+            progressBar.style.width = `${progress}%`;
+
             // Ефект для останніх 10 секунд
             if (timeLeft <= 10) {
                 timerDisplay.classList.add("low-time");
                 document.body.style.background = "linear-gradient(135deg, #ff5722, #d81b60)";
+            }
+
+            // Додавання плаваючих фраз
+            if (Math.random() < 0.05) {
+                spawnFloatingText();
             }
 
             if (timeLeft > 0) {
@@ -200,6 +247,7 @@
                     endScreen.classList.add("active");
                     startConfetti();
                     playSound();
+                    spawnMedal();
                 }, 500);
                 clearInterval(timerInterval);
             }
@@ -225,6 +273,36 @@
         function playSound() {
             const audio = new Audio("https://www.soundjay.com/buttons/beep-01a.mp3");
             audio.play().catch(() => console.log("Звук не відтворився"));
+        }
+
+        // Функція для плаваючих фраз
+        function spawnFloatingText() {
+            const phrases = ["Смачного!", "Тримайся!", "Сніданок — сила!", "Ти зможеш!"];
+            let text = document.createElement("div");
+            text.classList.add("floating-text");
+            text.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+            text.style.left = Math.random() * 80 + "vw";
+            text.style.top = Math.random() * 80 + "vh";
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 8000);
+        }
+
+        // Функція для медалі
+        function spawnMedal() {
+            let medal = document.createElement("div");
+            medal.textContent = "🏅";
+            medal.style.position = "absolute";
+            medal.style.fontSize = "5em";
+            medal.style.left = "50%";
+            medal.style.top = "20%";
+            medal.style.transform = "translateX(-50%)";
+            medal.style.animation = "dropMedal 2s ease forwards";
+            endScreen.appendChild(medal);
+        }
+
+        @keyframes dropMedal {
+            0% { transform: translate(-50%, -100vh); }
+            100% { transform: translate(-50%, 0); }
         }
 
         // Дія кнопки
