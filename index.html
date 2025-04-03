@@ -51,6 +51,13 @@
         #timer.low-time {
             color: #ff0000;
             transform: scale(1.1);
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) scale(1.1); }
+            25% { transform: translateX(-5px) scale(1.1); }
+            75% { transform: translateX(5px) scale(1.1); }
         }
 
         .container::before {
@@ -95,6 +102,13 @@
         .end-screen.active {
             display: flex;
             opacity: 1;
+            animation: bgShift 5s infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% { background: linear-gradient(135deg, #d81b60, #e65100); }
+            50% { background: linear-gradient(135deg, #ffeb3b, #d81b60); }
+            100% { background: linear-gradient(135deg, #e65100, #ff9800); }
         }
 
         .end-screen h2 {
@@ -103,14 +117,29 @@
             text-transform: uppercase;
             text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
             margin: 0;
-            animation: pulse 2s infinite;
             text-align: center;
             padding: 0 5vw;
+            opacity: 0;
+            animation: titleFlyIn 2s ease forwards;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes titleFlyIn {
+            0% { transform: translateX(-100vw); opacity: 0; }
+            50% { transform: translateX(10vw); opacity: 1; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .end-screen p {
+            color: #fff;
+            font-size: clamp(1em, 3vw, 1.5em);
+            margin: 2vh 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 1s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
 
         .accept-btn {
@@ -203,6 +232,133 @@
             font-size: clamp(2em, 10vw, 5em);
         }
 
+        /* Бонусна їжа */
+        .bonus-food {
+            position: absolute;
+            font-size: clamp(1.5em, 5vw, 3em);
+            cursor: pointer;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        /* Стилі для гри */
+        .game-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #4a5d23, #8a9a5b);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        #trench {
+            width: 100%;
+            height: 20vh;
+            background: #3c2f2f;
+            position: absolute;
+            bottom: 0;
+            border-top: 5px solid #5c4033;
+        }
+
+        #gameScore {
+            color: #fff;
+            font-size: clamp(1.5em, 5vw, 2em);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2vh;
+            z-index: 10;
+        }
+
+        .enemy-vehicle {
+            position: absolute;
+            width: clamp(40px, 6vw, 60px);
+            height: clamp(40px, 6vw, 60px);
+            cursor: pointer;
+        }
+
+        .tank {
+            background: url('tank.png') no-repeat center center;
+            background-size: contain;
+            animation: advance 4s linear; /* Швидший */
+        }
+        .btr {
+            background: url('btr.png') no-repeat center center;
+            background-size: contain;
+            animation: advance 5s linear;
+        }
+        .truck {
+            background: url('truck.png') no-repeat center center;
+            background-size: contain;
+            animation: advance 6s linear;
+        }
+        .jeep {
+            background: url('jeep.png') no-repeat center center;
+            background-size: contain;
+            animation: advance 7s linear; /* Повільніший */
+        }
+
+        @keyframes advance {
+            0% { transform: translateY(-80vh); opacity: 1; }
+            100% { transform: translateY(60vh); opacity: 1; }
+        }
+
+        .explosion {
+            position: absolute;
+            font-size: clamp(2em, 5vw, 3em);
+            animation: explode 1s ease forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .smoke {
+            position: absolute;
+            font-size: clamp(1.5em, 4vw, 2.5em);
+            animation: smokeFade 2s ease forwards;
+        }
+
+        @keyframes smokeFade {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0; }
+        }
+
+        #shootHint {
+            position: absolute;
+            top: 50%;
+            left: 2vw;
+            color: #ff0000;
+            font-size: clamp(1em, 3vw, 1.5em);
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        #countdown {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ff0000;
+            font-size: clamp(5em, 15vw, 10em);
+            font-weight: bold;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+            z-index: 20;
+        }
+
         /* Медіа-запити для малих екранів */
         @media (max-width: 600px) {
             .container {
@@ -225,7 +381,8 @@
     </div>
 
     <div class="end-screen" id="endScreen">
-        <h2>Тепер Ти зампотил ББПС</h2>
+        <h2 id="endTitle">Тепер Ти зампотил ББПС</h2>
+        <p id="endMessage">Твоя сніданкова місія виконана!</p>
         <button class="accept-btn" id="acceptBtn">Прийняти посаду</button>
     </div>
 
@@ -237,6 +394,16 @@
         const endScreen = document.getElementById("endScreen");
         const acceptBtn = document.getElementById("acceptBtn");
         const progressBar = document.getElementById("progress-bar");
+        const endTitle = document.getElementById("endTitle");
+        const endMessage = document.getElementById("endMessage");
+        let timerInterval;
+        let gameInterval;
+        let score = 0;
+
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
 
         function updateTimer() {
             let minutes = Math.floor(timeLeft / 60);
@@ -245,19 +412,19 @@
             seconds = seconds < 10 ? "0" + seconds : seconds;
             timerDisplay.textContent = `${minutes}:${seconds}`;
 
-            // Оновлення прогрес-бару
             let progress = (timeLeft / totalTime) * 100;
             progressBar.style.width = `${progress}%`;
 
-            // Ефект для останніх 10 секунд
             if (timeLeft <= 10) {
                 timerDisplay.classList.add("low-time");
                 document.body.style.background = "linear-gradient(135deg, #ff5722, #d81b60)";
             }
 
-            // Додавання плаваючих фраз
             if (Math.random() < 0.05) {
                 spawnFloatingText();
+            }
+            if (Math.random() < 0.03) {
+                spawnBonusFood();
             }
 
             if (timeLeft > 0) {
@@ -270,13 +437,14 @@
                     startConfetti();
                     playSound();
                     spawnMedal();
+                    randomizeEndTitle();
+                    showEndScreen();
                 }, 500);
                 clearInterval(timerInterval);
             }
         }
 
-        const timerInterval = setInterval(updateTimer, 1000);
-        updateTimer();
+        startTimer();
 
         // Функція для конфетті
         function startConfetti() {
@@ -309,6 +477,29 @@
             setTimeout(() => text.remove(), 8000);
         }
 
+        // Функція для бонусної їжі
+        function spawnBonusFood() {
+            const foods = ["🥞", "🍳", "🥓", "🍊"];
+            let food = document.createElement("div");
+            food.classList.add("bonus-food");
+            food.textContent = foods[Math.floor(Math.random() * foods.length)];
+            food.style.left = Math.random() * 80 + "vw";
+            food.style.top = Math.random() * 80 + "vh";
+            food.onclick = () => {
+                timeLeft = Math.min(timeLeft + 5, totalTime);
+                food.remove();
+                playBonusSound();
+            };
+            document.body.appendChild(food);
+            setTimeout(() => food.remove(), 5000);
+        }
+
+        // Функція для звуку бонусу
+        function playBonusSound() {
+            const audio = new Audio("https://www.soundjay.com/buttons/beep-07a.mp3");
+            audio.play().catch(() => console.log("Бонусний звук не відтворився"));
+        }
+
         // Функція для медалі
         function spawnMedal() {
             let medal = document.createElement("div");
@@ -322,6 +513,24 @@
             endScreen.appendChild(medal);
         }
 
+        // Функція для випадкового титулу
+        function randomizeEndTitle() {
+            const titles = [
+                "Тепер Ти зампотил ББПС",
+                "Генерал Сніданків!",
+                "Майстер Круасанів!",
+                "Король Сніданку ББПС",
+                "Легенда Кавового Фронту"
+            ];
+            endTitle.textContent = titles[Math.floor(Math.random() * titles.length)];
+        }
+
+        // Покращене завершення
+        function showEndScreen() {
+            acceptBtn.style.display = "block";
+            acceptBtn.style.opacity = "1";
+        }
+
         // Анімація для медалі
         const styleSheet = document.styleSheets[0];
         styleSheet.insertRule(`
@@ -331,12 +540,123 @@
             }
         `, styleSheet.cssRules.length);
 
-        // Дія кнопки
+        // Дія кнопки "Прийняти посаду" з переходом до гри
         acceptBtn.onclick = () => {
-            document.body.innerHTML = "<h1 style='color: #fff; font-size: clamp(2em, 10vw, 4em); text-align: center; margin-top: 50vh;'>Вітаю, зампотил ББПС!</h1>";
-            document.body.style.background = "linear-gradient(135deg, #4caf50, #2196f3)";
+            endMessage.textContent = "Починай працювати за посадою... треба вижити.";
+            acceptBtn.style.opacity = "0";
+            setTimeout(() => {
+                acceptBtn.style.display = "none";
+                startGamePrep();
+            }, 500);
             startConfetti();
         };
+
+        // Підготовка до гри з відліком
+        function startGamePrep() {
+            // Створюємо елемент для відліку
+            const countdownDiv = document.createElement("div");
+            countdownDiv.id = "countdown";
+            document.body.appendChild(countdownDiv);
+
+            let countdown = 5;
+            countdownDiv.textContent = countdown;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownDiv.textContent = countdown;
+                } else if (countdown === 0) {
+                    countdownDiv.textContent = "В бій!";
+                } else {
+                    clearInterval(countdownInterval);
+                    countdownDiv.remove();
+                    document.body.innerHTML = `
+                        <div class="game-screen" id="gameScreen">
+                            <p id="gameScore">Знищено: 0</p>
+                            <div id="shootHint">Стріляй!!!</div>
+                            <div id="trench"></div>
+                        </div>
+                    `;
+                    startGame();
+                }
+            }, 1000);
+        }
+
+        // Функція для запуску гри
+        function startGame() {
+            const gameScreen = document.getElementById("gameScreen");
+            const gameScore = document.getElementById("gameScore");
+            score = 0;
+
+            gameInterval = setInterval(() => {
+                spawnEnemyVehicle();
+            }, 1500);
+
+            setTimeout(() => {
+                clearInterval(gameInterval);
+                gameScreen.innerHTML = `
+                    <h2>Бій завершено!</h2>
+                    <p>Ти знищив: ${score} одиниць техніки</p>
+                `;
+            }, 20000); // Гра триває 20 секунд
+        }
+
+        // Функція для ворожої техніки
+        function spawnEnemyVehicle() {
+            const vehicles = ["tank", "btr", "truck", "jeep"];
+            let vehicle = document.createElement("div");
+            vehicle.classList.add("enemy-vehicle");
+            const vehicleType = vehicles[Math.floor(Math.random() * vehicles.length)];
+            vehicle.classList.add(vehicleType);
+            vehicle.style.left = Math.random() * 90 + "vw";
+            vehicle.onclick = () => {
+                score += 1;
+                document.getElementById("gameScore").textContent = `Знищено: ${score}`;
+                spawnExplosion(vehicle.style.left, vehicle.style.top);
+                spawnSmoke(vehicle.style.left, vehicle.style.top);
+                vehicle.remove();
+                playShootSound();
+                playExplosionSound();
+            };
+            document.getElementById("gameScreen").appendChild(vehicle);
+            setTimeout(() => vehicle.remove(), 7000);
+        }
+
+        // Функція для звуку стрільби
+        function playShootSound() {
+            const audio = new Audio("https://www.soundjay.com/weapon/gunshot-01.mp3");
+            audio.play().catch(() => console.log("Звук стрільби не відтворився"));
+        }
+
+        // Функція для звуку вибуху
+        function playExplosionSound() {
+            const audio = new Audio("https://www.soundjay.com/weapon/explosion-01.mp3");
+            audio.play().catch(() => console.log("Звук вибуху не відтворився"));
+        }
+
+        // Функція для ефекту вибуху
+        function spawnExplosion(left, top) {
+            let explosion = document.createElement("div");
+            explosion.classList.add("explosion");
+            explosion.textContent = "💥";
+            explosion.style.position = "absolute";
+            explosion.style.left = left;
+            explosion.style.top = top;
+            document.getElementById("gameScreen").appendChild(explosion);
+            setTimeout(() => explosion.remove(), 1000);
+        }
+
+        // Функція для ефекту диму
+        function spawnSmoke(left, top) {
+            let smoke = document.createElement("div");
+            smoke.classList.add("smoke");
+            smoke.textContent = "💨";
+            smoke.style.position = "absolute";
+            smoke.style.left = left;
+            smoke.style.top = top;
+            document.getElementById("gameScreen").appendChild(smoke);
+            setTimeout(() => smoke.remove(), 2000);
+        }
     </script>
 </body>
 </html>
