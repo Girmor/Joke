@@ -197,6 +197,12 @@
             100% { transform: translate(50px, -50px); opacity: 0; }
         }
 
+        /* Медаль */
+        .medal {
+            position: absolute;
+            font-size: clamp(2em, 10vw, 5em);
+        }
+
         /* Медіа-запити для малих екранів */
         @media (max-width: 600px) {
             .container {
@@ -306,9 +312,9 @@
         // Функція для медалі
         function spawnMedal() {
             let medal = document.createElement("div");
+            medal.classList.add("medal");
             medal.textContent = "🏅";
             medal.style.position = "absolute";
-            medal.style.fontSize = clamp(2em, 10vw, 5em);
             medal.style.left = "50%";
             medal.style.top = "20%";
             medal.style.transform = "translateX(-50%)";
