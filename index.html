@@ -198,7 +198,7 @@
 <body>
     <div class="container" id="timerContainer">
         <h1>Час завершити сніданок!</h1>
-        <div id="timer">05:00</div>
+        <div id="timer">00:30</div>
         <div id="progress"><div id="progress-bar"></div></div>
     </div>
 
@@ -208,7 +208,7 @@
     </div>
 
     <script>
-        let timeLeft = 30; // 5 хвилин у секундах
+        let timeLeft = 30; // 30 секунд
         const totalTime = 30;
         const timerDisplay = document.getElementById("timer");
         const timerContainer = document.getElementById("timerContainer");
@@ -300,10 +300,14 @@
             endScreen.appendChild(medal);
         }
 
-        @keyframes dropMedal {
-            0% { transform: translate(-50%, -100vh); }
-            100% { transform: translate(-50%, 0); }
-        }
+        // Анімація для медалі
+        const styleSheet = document.styleSheets[0];
+        styleSheet.insertRule(`
+            @keyframes dropMedal {
+                0% { transform: translate(-50%, -100vh); }
+                100% { transform: translate(-50%, 0); }
+            }
+        `, styleSheet.cssRules.length);
 
         // Дія кнопки
         acceptBtn.onclick = () => {
