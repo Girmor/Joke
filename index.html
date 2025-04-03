@@ -21,26 +21,27 @@
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
+            padding: 5vw;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             position: relative;
             transition: opacity 0.5s ease;
+            max-width: 90vw;
         }
 
         h1 {
             color: #e65100;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            font-size: clamp(1.5em, 5vw, 2.5em);
+            margin-bottom: 4vw;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #timer {
-            font-size: 4em;
+            font-size: clamp(2em, 10vw, 4em);
             color: #d81b60;
             font-weight: bold;
             background: #fff3e0;
-            padding: 20px;
+            padding: 3vw;
             border-radius: 15px;
             display: inline-block;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -55,18 +56,18 @@
         .container::before {
             content: "☕";
             position: absolute;
-            font-size: 3em;
-            top: 10%;
-            left: 10%;
+            font-size: clamp(1.5em, 5vw, 3em);
+            top: 5%;
+            left: 5%;
             animation: float 6s infinite ease-in-out;
         }
 
         .container::after {
             content: "🥐";
             position: absolute;
-            font-size: 3em;
-            bottom: 15%;
-            right: 15%;
+            font-size: clamp(1.5em, 5vw, 3em);
+            bottom: 5%;
+            right: 5%;
             animation: float 6s infinite ease-in-out;
         }
 
@@ -98,11 +99,13 @@
 
         .end-screen h2 {
             color: #fff;
-            font-size: 5em;
+            font-size: clamp(2em, 10vw, 5em);
             text-transform: uppercase;
             text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
             margin: 0;
             animation: pulse 2s infinite;
+            text-align: center;
+            padding: 0 5vw;
         }
 
         @keyframes pulse {
@@ -111,9 +114,9 @@
         }
 
         .accept-btn {
-            margin-top: 40px;
-            padding: 20px 40px;
-            font-size: 1.5em;
+            margin-top: 5vh;
+            padding: clamp(10px, 3vw, 20px) clamp(20px, 5vw, 40px);
+            font-size: clamp(1em, 3vw, 1.5em);
             color: #fff;
             background: #ffeb3b;
             border: none;
@@ -133,7 +136,7 @@
         .accept-btn::after {
             content: "✨";
             position: absolute;
-            font-size: 2em;
+            font-size: clamp(1em, 3vw, 2em);
             top: -10px;
             right: -10px;
             animation: sparkle 1s infinite;
@@ -148,8 +151,8 @@
         /* Конфетті */
         .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: clamp(5px, 1vw, 10px);
+            height: clamp(5px, 1vw, 10px);
             background: #fff;
             animation: fall 5s linear infinite;
             border-radius: 50%;
@@ -162,9 +165,9 @@
 
         /* Прогрес-бар */
         #progress {
-            width: 200px;
-            height: 20px;
-            margin-top: 20px;
+            width: clamp(100px, 50vw, 200px);
+            height: clamp(10px, 2vw, 20px);
+            margin-top: 3vh;
             background: #fff;
             border-radius: 10px;
             overflow: hidden;
@@ -181,7 +184,7 @@
         .floating-text {
             position: absolute;
             color: #fff;
-            font-size: 1.5em;
+            font-size: clamp(1em, 3vw, 1.5em);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             animation: floatText 8s infinite ease-in-out;
             pointer-events: none;
@@ -191,7 +194,20 @@
             0% { transform: translate(0, 0); opacity: 0; }
             20% { opacity: 1; }
             80% { opacity: 1; }
-            100% { transform: translate(100px, -100px); opacity: 0; }
+            100% { transform: translate(50px, -50px); opacity: 0; }
+        }
+
+        /* Медіа-запити для малих екранів */
+        @media (max-width: 600px) {
+            .container {
+                padding: 3vw;
+            }
+            .end-screen h2 {
+                font-size: clamp(1.5em, 8vw, 3em);
+            }
+            .accept-btn {
+                margin-top: 3vh;
+            }
         }
     </style>
 </head>
@@ -292,7 +308,7 @@
             let medal = document.createElement("div");
             medal.textContent = "🏅";
             medal.style.position = "absolute";
-            medal.style.fontSize = "5em";
+            medal.style.fontSize = clamp(2em, 10vw, 5em);
             medal.style.left = "50%";
             medal.style.top = "20%";
             medal.style.transform = "translateX(-50%)";
@@ -311,7 +327,7 @@
 
         // Дія кнопки
         acceptBtn.onclick = () => {
-            document.body.innerHTML = "<h1 style='color: #fff; font-size: 4em; text-align: center; margin-top: 50vh;'>Вітаю, зампотил ББПС!</h1>";
+            document.body.innerHTML = "<h1 style='color: #fff; font-size: clamp(2em, 10vw, 4em); text-align: center; margin-top: 50vh;'>Вітаю, зампотил ББПС!</h1>";
             document.body.style.background = "linear-gradient(135deg, #4caf50, #2196f3)";
             startConfetti();
         };
