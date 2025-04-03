@@ -43,6 +43,12 @@
             border-radius: 15px;
             display: inline-block;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        #timer.low-time {
+            color: #ff0000;
+            transform: scale(1.1);
         }
 
         .container::before {
@@ -114,11 +120,43 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, background 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .accept-btn:hover {
             transform: scale(1.1);
             background: #ffd700;
+        }
+
+        .accept-btn::after {
+            content: "✨";
+            position: absolute;
+            font-size: 2em;
+            top: -10px;
+            right: -10px;
+            animation: sparkle 1s infinite;
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Конфетті */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            animation: fall 5s linear infinite;
+            border-radius: 50%;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
@@ -130,14 +168,15 @@
 
     <div class="end-screen" id="endScreen">
         <h2>Тепер Ти зампотил ББПС</h2>
-        <button class="accept-btn" onclick="alert('Вітаю, зампотил ББПС!')">Прийняти посаду</button>
+        <button class="accept-btn" id="acceptBtn">Прийняти посаду</button>
     </div>
 
     <script>
-        let timeLeft = 300; // 5 хвилин у секундах
+        let timeLeft = 30; // 5 хвилин у секундах
         const timerDisplay = document.getElementById("timer");
         const timerContainer = document.getElementById("timerContainer");
         const endScreen = document.getElementById("endScreen");
+        const acceptBtn = document.getElementById("acceptBtn");
 
         function updateTimer() {
             let minutes = Math.floor(timeLeft / 60);
@@ -146,6 +185,12 @@
             seconds = seconds < 10 ? "0" + seconds : seconds;
             timerDisplay.textContent = `${minutes}:${seconds}`;
 
+            // Ефект для останніх 10 секунд
+            if (timeLeft <= 10) {
+                timerDisplay.classList.add("low-time");
+                document.body.style.background = "linear-gradient(135deg, #ff5722, #d81b60)";
+            }
+
             if (timeLeft > 0) {
                 timeLeft--;
             } else {
@@ -153,6 +198,8 @@
                 setTimeout(() => {
                     timerContainer.style.display = "none";
                     endScreen.classList.add("active");
+                    startConfetti();
+                    playSound();
                 }, 500);
                 clearInterval(timerInterval);
             }
@@ -160,6 +207,32 @@
 
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer();
+
+        // Функція для конфетті
+        function startConfetti() {
+            for (let i = 0; i < 50; i++) {
+                let confetti = document.createElement("div");
+                confetti.classList.add("confetti");
+                confetti.style.left = Math.random() * 100 + "vw";
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDelay = Math.random() * 5 + "s";
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Функція для звуку
+        function playSound() {
+            const audio = new Audio("https://www.soundjay.com/buttons/beep-01a.mp3");
+            audio.play().catch(() => console.log("Звук не відтворився"));
+        }
+
+        // Дія кнопки
+        acceptBtn.onclick = () => {
+            document.body.innerHTML = "<h1 style='color: #fff; font-size: 4em; text-align: center; margin-top: 50vh;'>Вітаю, зампотил ББПС!</h1>";
+            document.body.style.background = "linear-gradient(135deg, #4caf50, #2196f3)";
+            startConfetti();
+        };
     </script>
 </body>
 </html>
